@@ -32,9 +32,11 @@ describe("sanitizeCoachMessage", () => {
 
 describe("buildCoachSystemPrompt", () => {
   it("includes profile and entries as JSON", () => {
-    const s = buildCoachSystemPrompt({ display_name: "Ada", weekly_goal_kg: 60, streak_days: 4 }, [entry()]);
+    const s = buildCoachSystemPrompt({ display_name: "Ada", weekly_goal_kg: 60, streak_days: 4 }, [
+      entry(),
+    ]);
     expect(s).toContain("Ada");
-    expect(s).toContain("\"weekly_goal_kg\":60");
+    expect(s).toContain('"weekly_goal_kg":60');
     expect(s).toContain("2026-06-18");
   });
   it("handles null profile gracefully", () => {
@@ -58,19 +60,35 @@ describe("averageDailyFootprint", () => {
     expect(averageDailyFootprint([entry({ total_kg: 10 }), entry({ total_kg: 20 })])).toBe(15);
   });
   it("rounds to 2 decimals", () => {
-    expect(averageDailyFootprint([entry({ total_kg: 1 }), entry({ total_kg: 2 }), entry({ total_kg: 2 })])).toBeCloseTo(1.67, 2);
+    expect(
+      averageDailyFootprint([
+        entry({ total_kg: 1 }),
+        entry({ total_kg: 2 }),
+        entry({ total_kg: 2 }),
+      ]),
+    ).toBeCloseTo(1.67, 2);
   });
 });
 
 describe("topCategory", () => {
   it("identifies transportation as top", () => {
-    expect(topCategory(entry({ transportation_kg: 10, electricity_kg: 1 }))).toBe("transportation_kg");
+    expect(topCategory(entry({ transportation_kg: 10, electricity_kg: 1 }))).toBe(
+      "transportation_kg",
+    );
   });
   it("identifies food as top", () => {
-    expect(topCategory(entry({ transportation_kg: 0, food_kg: 8, electricity_kg: 1 }))).toBe("food_kg");
+    expect(topCategory(entry({ transportation_kg: 0, food_kg: 8, electricity_kg: 1 }))).toBe(
+      "food_kg",
+    );
   });
   it("breaks ties consistently with first category", () => {
-    const e = entry({ transportation_kg: 5, electricity_kg: 5, food_kg: 5, shopping_kg: 5, waste_kg: 5 });
+    const e = entry({
+      transportation_kg: 5,
+      electricity_kg: 5,
+      food_kg: 5,
+      shopping_kg: 5,
+      waste_kg: 5,
+    });
     expect(topCategory(e)).toBe("transportation_kg");
   });
 });

@@ -53,7 +53,13 @@ export function averageDailyFootprint(entries: CoachContextEntry[]): number {
 
 /** Identify the largest emissions category from a day's entry. */
 export function topCategory(entry: CoachContextEntry): keyof CoachContextEntry {
-  const cats = ["transportation_kg", "electricity_kg", "food_kg", "shopping_kg", "waste_kg"] as const;
+  const cats = [
+    "transportation_kg",
+    "electricity_kg",
+    "food_kg",
+    "shopping_kg",
+    "waste_kg",
+  ] as const;
   let best: (typeof cats)[number] = cats[0];
   for (const c of cats) if ((entry[c] || 0) > (entry[best] || 0)) best = c;
   return best;

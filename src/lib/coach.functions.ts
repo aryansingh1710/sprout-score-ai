@@ -19,7 +19,9 @@ export const askCoach = createServerFn({ method: "POST" })
     // Fetch last 14 days of footprint to ground the response
     const { data: entries } = await supabase
       .from("footprint_entries")
-      .select("entry_date, total_kg, transportation_kg, electricity_kg, food_kg, shopping_kg, waste_kg")
+      .select(
+        "entry_date, total_kg, transportation_kg, electricity_kg, food_kg, shopping_kg, waste_kg",
+      )
       .eq("user_id", userId)
       .order("entry_date", { ascending: false })
       .limit(14);

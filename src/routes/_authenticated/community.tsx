@@ -23,7 +23,6 @@ function Community() {
   const [content, setContent] = useState("");
   const awardBadge = useServerFn(awardParticipationBadge);
 
-
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
   }, []);
@@ -81,11 +80,17 @@ function Community() {
     onMutate: async ({ postId, liked }) => {
       await qc.cancelQueries({ queryKey: ["posts"] });
       const prev = qc.getQueryData(["posts"]) as any[] | undefined;
-      qc.setQueryData(["posts"], (prev ?? []).map((p: any) =>
-        p.id === postId
-          ? { ...p, likes: liked ? p.likes.filter((u: string) => u !== userId) : [...p.likes, userId] }
-          : p,
-      ));
+      qc.setQueryData(
+        ["posts"],
+        (prev ?? []).map((p: any) =>
+          p.id === postId
+            ? {
+                ...p,
+                likes: liked ? p.likes.filter((u: string) => u !== userId) : [...p.likes, userId],
+              }
+            : p,
+        ),
+      );
       return { prev };
     },
     onError: (_e, _v, ctx) => ctx?.prev && qc.setQueryData(["posts"], ctx.prev),
@@ -108,7 +113,10 @@ function Community() {
 
       <GlassCard>
         <form
-          onSubmit={(e) => { e.preventDefault(); if (content.trim()) createPost.mutate(content.trim()); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (content.trim()) createPost.mutate(content.trim());
+          }}
           className="space-y-3"
         >
           <Textarea
@@ -120,7 +128,11 @@ function Community() {
           />
           <div className="flex justify-between items-center">
             <span className="text-xs text-muted-foreground">{content.length}/500</span>
-            <Button type="submit" disabled={createPost.isPending || !content.trim()} className="gap-2">
+            <Button
+              type="submit"
+              disabled={createPost.isPending || !content.trim()}
+              className="gap-2"
+            >
               <Send className="size-4" /> Post
             </Button>
           </div>
@@ -140,7 +152,9 @@ function Community() {
           return (
             <GlassCard key={p.id}>
               <div className="flex gap-3">
-                <Avatar><AvatarFallback>{initials}</AvatarFallback></Avatar>
+                <Avatar>
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>

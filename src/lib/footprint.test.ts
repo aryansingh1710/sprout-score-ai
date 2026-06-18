@@ -41,9 +41,7 @@ describe("calculatorSchema", () => {
   });
 
   it("caps notes length at 500", () => {
-    expect(() =>
-      calculatorSchema.parse({ notes: "x".repeat(501) }),
-    ).toThrow();
+    expect(() => calculatorSchema.parse({ notes: "x".repeat(501) })).toThrow();
   });
 });
 
@@ -74,7 +72,8 @@ describe("computeFootprint", () => {
 
   it("computes food correctly", () => {
     const r = computeFootprint({ ...zero, beefServings: 2, dairyServings: 1, veggieServings: 3 });
-    const expected = 2 * FACTORS.beefServings + 1 * FACTORS.dairyServings + 3 * FACTORS.veggieServings;
+    const expected =
+      2 * FACTORS.beefServings + 1 * FACTORS.dairyServings + 3 * FACTORS.veggieServings;
     expect(r.food_kg).toBeCloseTo(expected, 2);
   });
 

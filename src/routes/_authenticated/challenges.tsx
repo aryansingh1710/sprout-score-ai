@@ -20,7 +20,6 @@ function Challenges() {
   const awardBadge = useServerFn(awardParticipationBadge);
   const completeFn = useServerFn(completeChallenge);
 
-
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
   }, []);
@@ -51,7 +50,10 @@ function Challenges() {
       if (error) throw error;
       await awardBadge({ data: { slug: "challenger" } }).catch(() => {});
     },
-    onSuccess: () => { toast.success("Challenge joined!"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
+    onSuccess: () => {
+      toast.success("Challenge joined!");
+      qc.invalidateQueries({ queryKey: ["challenges", userId] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -59,7 +61,10 @@ function Challenges() {
     mutationFn: async (challengeId: string) => {
       await completeFn({ data: { challenge_id: challengeId } });
     },
-    onSuccess: () => { toast.success("Marked complete! 🌱"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
+    onSuccess: () => {
+      toast.success("Marked complete! 🌱");
+      qc.invalidateQueries({ queryKey: ["challenges", userId] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -101,7 +106,11 @@ function Challenges() {
                   <CheckCircle2 className="size-4" /> Completed
                 </span>
               ) : (
-                <Button variant="outline" onClick={() => complete.mutate(c.id)} disabled={complete.isPending}>
+                <Button
+                  variant="outline"
+                  onClick={() => complete.mutate(c.id)}
+                  disabled={complete.isPending}
+                >
                   Mark complete
                 </Button>
               )}
@@ -109,7 +118,9 @@ function Challenges() {
           </GlassCard>
         ))}
         {q.data?.length === 0 && (
-          <GlassCard className="text-center text-sm text-muted-foreground">No active challenges right now.</GlassCard>
+          <GlassCard className="text-center text-sm text-muted-foreground">
+            No active challenges right now.
+          </GlassCard>
         )}
       </div>
     </div>

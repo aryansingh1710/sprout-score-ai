@@ -31,7 +31,10 @@ function Badges() {
     enabled: !!userId,
     queryFn: async () => {
       const { data: all } = await supabase.from("badges").select("*").order("name");
-      const { data: mine } = await supabase.from("user_badges").select("badge_id").eq("user_id", userId!);
+      const { data: mine } = await supabase
+        .from("user_badges")
+        .select("badge_id")
+        .eq("user_id", userId!);
       const set = new Set((mine ?? []).map((m) => m.badge_id));
       return (all ?? []).map((b) => ({ ...b, earned: set.has(b.id) }));
     },

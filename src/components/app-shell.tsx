@@ -53,9 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const items = isAdmin
-    ? [...NAV, { to: "/admin", label: "Admin", icon: Shield } as const]
-    : NAV;
+  const items = isAdmin ? [...NAV, { to: "/admin", label: "Admin", icon: Shield } as const] : NAV;
 
   async function signOut() {
     await supabase.auth.signOut();

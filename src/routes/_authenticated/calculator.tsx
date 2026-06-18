@@ -8,18 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import {
-  Car,
-  Bus,
-  Train,
-  Plane,
-  Zap,
-  Beef,
-  Milk,
-  Salad,
-  ShoppingBag,
-  Trash2,
-} from "lucide-react";
+import { Car, Bus, Train, Plane, Zap, Beef, Milk, Salad, ShoppingBag, Trash2 } from "lucide-react";
 import { saveFootprintEntry } from "@/lib/footprint.functions";
 import { calculatorSchema, computeFootprint, carbonScore, CATEGORY_LABELS } from "@/lib/footprint";
 
@@ -28,7 +17,13 @@ export const Route = createFileRoute("/_authenticated/calculator")({
   component: Calculator,
 });
 
-const FIELDS: { key: keyof ReturnType<typeof empty>; label: string; unit: string; icon: any; group: string }[] = [
+const FIELDS: {
+  key: keyof ReturnType<typeof empty>;
+  label: string;
+  unit: string;
+  icon: any;
+  group: string;
+}[] = [
   { key: "carKm", label: "Car", unit: "km", icon: Car, group: "Transportation" },
   { key: "busKm", label: "Bus", unit: "km", icon: Bus, group: "Transportation" },
   { key: "trainKm", label: "Train", unit: "km", icon: Train, group: "Transportation" },
@@ -43,10 +38,17 @@ const FIELDS: { key: keyof ReturnType<typeof empty>; label: string; unit: string
 
 function empty() {
   return {
-    carKm: 0, busKm: 0, trainKm: 0, flightKm: 0,
+    carKm: 0,
+    busKm: 0,
+    trainKm: 0,
+    flightKm: 0,
     electricityKwh: 0,
-    beefServings: 0, dairyServings: 0, veggieServings: 0,
-    shoppingUsd: 0, wasteKg: 0, notes: "",
+    beefServings: 0,
+    dairyServings: 0,
+    veggieServings: 0,
+    shoppingUsd: 0,
+    wasteKg: 0,
+    notes: "",
   };
 }
 
@@ -103,7 +105,8 @@ function Calculator() {
                 {FIELDS.filter((f) => f.group === g).map((f) => (
                   <div key={f.key}>
                     <Label htmlFor={f.key} className="flex items-center gap-2 text-xs">
-                      <f.icon className="size-3.5" /> {f.label} <span className="text-muted-foreground">({f.unit})</span>
+                      <f.icon className="size-3.5" /> {f.label}{" "}
+                      <span className="text-muted-foreground">({f.unit})</span>
                     </Label>
                     <Input
                       id={f.key}
@@ -112,7 +115,10 @@ function Calculator() {
                       step="0.1"
                       value={(values as any)[f.key]}
                       onChange={(e) =>
-                        setValues((v) => ({ ...v, [f.key]: e.target.value === "" ? 0 : Number(e.target.value) }))
+                        setValues((v) => ({
+                          ...v,
+                          [f.key]: e.target.value === "" ? 0 : Number(e.target.value),
+                        }))
                       }
                     />
                   </div>
@@ -139,7 +145,9 @@ function Calculator() {
               {live.total_kg.toFixed(1)}
               <span className="text-base text-muted-foreground font-normal"> kg COâ‚‚e</span>
             </div>
-            <p className="text-sm mt-2">Score: <span className="font-semibold">{score}</span> / 100</p>
+            <p className="text-sm mt-2">
+              Score: <span className="font-semibold">{score}</span> / 100
+            </p>
 
             <div className="mt-4 space-y-2 text-sm">
               {(Object.keys(CATEGORY_LABELS) as (keyof typeof CATEGORY_LABELS)[]).map((k) => (

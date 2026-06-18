@@ -46,7 +46,9 @@ function Leaderboard() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="font-display text-2xl font-bold gradient-text">{u.total_score ?? 0}</div>
+                <div className="font-display text-2xl font-bold gradient-text">
+                  {u.total_score ?? 0}
+                </div>
                 <p className="text-xs text-muted-foreground">score</p>
               </div>
             </li>

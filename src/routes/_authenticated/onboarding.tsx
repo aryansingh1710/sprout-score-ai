@@ -25,7 +25,11 @@ function Onboarding() {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return;
-      const { data: p } = await supabase.from("profiles").select("display_name, onboarded").eq("id", data.user.id).maybeSingle();
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("display_name, onboarded")
+        .eq("id", data.user.id)
+        .maybeSingle();
       if (p?.onboarded) navigate({ to: "/dashboard" });
       if (p?.display_name) setName(p.display_name);
     });
@@ -55,7 +59,13 @@ function Onboarding() {
         <form onSubmit={submit} className="space-y-5">
           <div>
             <Label htmlFor="name">What should we call you?</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={60} />
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              maxLength={60}
+            />
           </div>
           <div>
             <Label htmlFor="goal">Weekly COâ‚‚e goal (kg)</Label>
