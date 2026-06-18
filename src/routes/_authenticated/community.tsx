@@ -63,9 +63,7 @@ function Community() {
     },
     onSuccess: async () => {
       setContent("");
-      // award badge
-      const { data: badge } = await supabase.from("badges").select("id").eq("slug", "community-voice").maybeSingle();
-      if (badge) await supabase.from("user_badges").upsert({ user_id: userId!, badge_id: badge.id }, { onConflict: "user_id,badge_id", ignoreDuplicates: true });
+      await awardBadge({ data: { slug: "community-voice" } }).catch(() => {});
       qc.invalidateQueries({ queryKey: ["posts"] });
       toast.success("Posted");
     },
