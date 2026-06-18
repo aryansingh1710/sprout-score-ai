@@ -40,9 +40,9 @@ function Community() {
         ? await supabase.from("profiles").select("id, display_name").in("id", ids)
         : { data: [] as { id: string; display_name: string | null }[] };
       const { data: likes } = await supabase.from("post_likes").select("post_id, user_id");
-      const profileMap = new Map((profiles ?? []).map((p: any) => [p.id, p]));
+      const profileMap = new Map((profiles ?? []).map((p) => [p.id, p] as const));
       const likeMap = new Map<string, string[]>();
-      (likes ?? []).forEach((l: any) => {
+      (likes ?? []).forEach((l) => {
         const arr = likeMap.get(l.post_id) ?? [];
         arr.push(l.user_id);
         likeMap.set(l.post_id, arr);
@@ -82,7 +82,7 @@ function Community() {
       const prev = qc.getQueryData<Array<{ id: string; likes: string[]; [k: string]: unknown }>>(["posts"]);
       qc.setQueryData(
         ["posts"],
-        (prev ?? []).map((p: any) =>
+        (prev ?? []).map((p) =>
           p.id === postId
             ? {
                 ...p,

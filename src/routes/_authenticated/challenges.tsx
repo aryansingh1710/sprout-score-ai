@@ -37,8 +37,8 @@ function Challenges() {
         .from("user_challenges")
         .select("challenge_id, completed")
         .eq("user_id", userId!);
-      const map = new Map((mine ?? []).map((m: any) => [m.challenge_id, m]));
-      return (challenges ?? []).map((c: any) => ({ ...c, joined: map.get(c.id) }));
+      const map = new Map((mine ?? []).map((m) => [m.challenge_id, m] as const));
+      return (challenges ?? []).map((c) => ({ ...c, joined: map.get(c.id) }));
     },
   });
 
