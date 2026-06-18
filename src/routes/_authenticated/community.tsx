@@ -21,6 +21,8 @@ function Community() {
   const qc = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
   const [content, setContent] = useState("");
+  const awardBadge = useServerFn(awardParticipationBadge);
+
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
