@@ -63,7 +63,7 @@ function Coach() {
       );
       return { prev };
     },
-    onError: (e: any, _v, ctx) => {
+    onError: (e: Error, _v: unknown, ctx: unknown) => {
       if (ctx?.prev) qc.setQueryData(["coach", userId], ctx.prev);
       toast.error(e.message ?? "Coach unavailable");
     },

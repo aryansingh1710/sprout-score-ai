@@ -54,7 +54,7 @@ function Challenges() {
       toast.success("Challenge joined!");
       qc.invalidateQueries({ queryKey: ["challenges", userId] });
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const complete = useMutation({
@@ -65,7 +65,7 @@ function Challenges() {
       toast.success("Marked complete! 🌱");
       qc.invalidateQueries({ queryKey: ["challenges", userId] });
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (

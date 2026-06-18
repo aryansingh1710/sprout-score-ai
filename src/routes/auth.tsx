@@ -57,7 +57,7 @@ function AuthPage() {
       }
       router.invalidate();
       navigate({ to: "/dashboard", replace: true });
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.message || "Something went wrong.");
     } finally {
       setLoading(false);

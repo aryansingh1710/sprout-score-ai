@@ -68,7 +68,7 @@ Recent 14-day footprint entries: ${JSON.stringify(entries ?? [])}`;
         })),
       });
       text = result.text;
-    } catch (e: any) {
+    } catch (e: unknown) {
       const msg = String(e?.message ?? e);
       if (msg.includes("429")) throw new Error("AI is rate-limited. Try again shortly.");
       if (msg.includes("402"))

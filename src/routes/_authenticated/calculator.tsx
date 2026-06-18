@@ -78,7 +78,7 @@ function Calculator() {
       qc.invalidateQueries({ queryKey: ["entries"] });
       qc.invalidateQueries({ queryKey: ["profile"] });
       navigate({ to: "/dashboard" });
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.message ?? "Could not save");
     } finally {
       setLoading(false);

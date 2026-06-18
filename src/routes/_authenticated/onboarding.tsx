@@ -42,7 +42,7 @@ function Onboarding() {
       await onboard({ data: { display_name: name, weekly_goal_kg: goal } });
       toast.success("All set!");
       navigate({ to: "/dashboard" });
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.message ?? "Something went wrong");
     } finally {
       setLoading(false);

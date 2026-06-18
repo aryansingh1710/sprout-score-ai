@@ -87,7 +87,7 @@ function Admin() {
       qc.invalidateQueries({ queryKey: ["admin-challenges"] });
       toast.success("Challenge created");
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const toggleChallenge = useMutation({

@@ -66,7 +66,7 @@ function Community() {
       qc.invalidateQueries({ queryKey: ["posts"] });
       toast.success("Posted");
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const toggleLike = useMutation({
