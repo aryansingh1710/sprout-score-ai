@@ -48,12 +48,13 @@ function Coach() {
     },
   });
 
-  const send = useMutation({
-    mutationFn: async (message: string) => ask({ data: { message } }),
+  type CoachMsg = { id: string; role: string; content: string; created_at: string };
+  const send = useMutation<{ reply: string }, Error, string, { prev: CoachMsg[] | undefined }>({
+    mutationFn: (message: string) => ask({ data: { message } }),
     onMutate: async (message) => {
       await qc.cancelQueries({ queryKey: ["coach", userId] });
-      const prev = qc.getQueryData(["coach", userId]) as any[] | undefined;
-      qc.setQueryData(
+      const prev = qc.getQueryData<CoachMsg[]>(["coach", userId]);
+      qc.setQueryData<CoachMsg[]>(
         ["coach", userId],
         [
           ...(prev ?? []),
@@ -63,7 +64,7 @@ function Coach() {
       );
       return { prev };
     },
-    onError: (e: Error, _v: unknown, ctx: unknown) => {
+    onError: (e, _v, ctx) => {
       if (ctx?.prev) qc.setQueryData(["coach", userId], ctx.prev);
       toast.error(e.message ?? "Coach unavailable");
     },
