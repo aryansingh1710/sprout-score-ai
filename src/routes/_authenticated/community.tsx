@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { GlassCard } from "@/components/glass-card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Heart, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { awardParticipationBadge } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/community")({
   head: () => ({ meta: [{ title: "Community — Verdant" }] }),
