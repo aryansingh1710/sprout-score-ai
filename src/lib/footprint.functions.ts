@@ -61,7 +61,11 @@ export const saveFootprintEntry = createServerFn({ method: "POST" })
         .select("id, slug")
         .in("slug", slugs);
       if (badges?.length) {
-        await supabase.from("user_badges").upsert(
+        // Use service-role client: the user_badges INSERT policy has been
+        // removed so clients cannot grant themselves badges. Eligibility
+        // is established above (entry inserted, streak computed).
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        await supabaseAdmin.from("user_badges").upsert(
           badges.map((b) => ({ user_id: userId, badge_id: b.id })),
           { onConflict: "user_id,badge_id", ignoreDuplicates: true },
         );
