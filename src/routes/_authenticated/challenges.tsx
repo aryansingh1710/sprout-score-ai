@@ -17,6 +17,9 @@ export const Route = createFileRoute("/_authenticated/challenges")({
 function Challenges() {
   const qc = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
+  const awardBadge = useServerFn(awardParticipationBadge);
+  const completeFn = useServerFn(completeChallenge);
+
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
