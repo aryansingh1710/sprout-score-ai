@@ -1,6 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { calculatorSchema, computeFootprint, carbonScore } from "./footprint";
+
+const onboardingSchema = z.object({
+  display_name: z.string().trim().min(1).max(60),
+  weekly_goal_kg: z.coerce.number().min(20).max(500),
+});
+
 
 export const saveFootprintEntry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -66,15 +73,7 @@ export const saveFootprintEntry = createServerFn({ method: "POST" })
 
 export const completeOnboarding = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => {
-    const z = require("zod") as typeof import("zod");
-    return z.z
-      .object({
-        display_name: z.z.string().trim().min(1).max(60),
-        weekly_goal_kg: z.z.coerce.number().min(20).max(500),
-      })
-      .parse(i);
-  })
+  .inputValidator((i: unknown) => onboardingSchema.parse(i))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
       .from("profiles")
