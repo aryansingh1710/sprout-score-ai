@@ -115,7 +115,7 @@ function Calculator() {
                       type="number"
                       min={0}
                       step="0.1"
-                      value={(values as any)[f.key]}
+                      value={values[f.key as keyof typeof values] as number}
                       onChange={(e) =>
                         setValues((v) => ({
                           ...v,
@@ -155,7 +155,7 @@ function Calculator() {
               {(Object.keys(CATEGORY_LABELS) as (keyof typeof CATEGORY_LABELS)[]).map((k) => (
                 <div key={k} className="flex justify-between">
                   <span className="text-muted-foreground">{CATEGORY_LABELS[k]}</span>
-                  <span className="font-medium">{(live as any)[k].toFixed(1)} kg</span>
+                  <span className="font-medium">{live[k].toFixed(1)} kg</span>
                 </div>
               ))}
             </div>

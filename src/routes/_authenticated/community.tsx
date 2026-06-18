@@ -79,7 +79,9 @@ function Community() {
     },
     onMutate: async ({ postId, liked }) => {
       await qc.cancelQueries({ queryKey: ["posts"] });
-      const prev = qc.getQueryData<Array<{ id: string; likes: string[]; [k: string]: unknown }>>(["posts"]);
+      const prev = qc.getQueryData<Array<{ id: string; likes: string[]; [k: string]: unknown }>>([
+        "posts",
+      ]);
       qc.setQueryData(
         ["posts"],
         (prev ?? []).map((p) =>
