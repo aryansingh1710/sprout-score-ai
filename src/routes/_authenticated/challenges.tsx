@@ -77,7 +77,7 @@ function Challenges() {
         <p className="text-sm text-muted-foreground">Pick one. Move the needle this week.</p>
       </div>
       <div className="grid md:grid-cols-2 gap-4">
-        {q.data?.map((c: any) => (
+        {q.data?.map((c) => (
           <GlassCard key={c.id}>
             <div className="flex items-start justify-between gap-3">
               <div>

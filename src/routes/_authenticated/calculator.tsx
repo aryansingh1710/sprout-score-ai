@@ -22,7 +22,7 @@ const FIELDS: {
   key: keyof ReturnType<typeof empty>;
   label: string;
   unit: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   group: string;
 }[] = [
   { key: "carKm", label: "Car", unit: "km", icon: Car, group: "Transportation" },

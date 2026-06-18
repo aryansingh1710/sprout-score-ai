@@ -38,7 +38,7 @@ function Community() {
       const ids = Array.from(new Set((data ?? []).map((p) => p.user_id)));
       const { data: profiles } = ids.length
         ? await supabase.from("profiles").select("id, display_name").in("id", ids)
-        : { data: [] as any[] };
+        : { data: [] as { id: string; display_name: string | null }[] };
       const { data: likes } = await supabase.from("post_likes").select("post_id, user_id");
       const profileMap = new Map((profiles ?? []).map((p: any) => [p.id, p]));
       const likeMap = new Map<string, string[]>();
@@ -79,7 +79,7 @@ function Community() {
     },
     onMutate: async ({ postId, liked }) => {
       await qc.cancelQueries({ queryKey: ["posts"] });
-      const prev = qc.getQueryData(["posts"]) as any[] | undefined;
+      const prev = qc.getQueryData<Array<{ id: string; likes: string[]; [k: string]: unknown }>>(["posts"]);
       qc.setQueryData(
         ["posts"],
         (prev ?? []).map((p: any) =>

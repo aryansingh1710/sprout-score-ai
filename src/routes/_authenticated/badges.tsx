@@ -1,3 +1,4 @@
+import type React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -6,7 +7,7 @@ import { GlassCard } from "@/components/glass-card";
 import { Award, Sprout, Flame, Feather, Target, Megaphone, Leaf } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   sprout: Sprout,
   flame: Flame,
   feather: Feather,
