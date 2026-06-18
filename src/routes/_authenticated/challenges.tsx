@@ -49,8 +49,7 @@ function Challenges() {
         .from("user_challenges")
         .insert({ user_id: userId!, challenge_id: challengeId });
       if (error) throw error;
-      const { data: badge } = await supabase.from("badges").select("id").eq("slug", "challenger").maybeSingle();
-      if (badge) await supabase.from("user_badges").upsert({ user_id: userId!, badge_id: badge.id }, { onConflict: "user_id,badge_id", ignoreDuplicates: true });
+      await awardBadge({ data: { slug: "challenger" } }).catch(() => {});
     },
     onSuccess: () => { toast.success("Challenge joined!"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
     onError: (e: any) => toast.error(e.message),
@@ -58,13 +57,10 @@ function Challenges() {
 
   const complete = useMutation({
     mutationFn: async (challengeId: string) => {
-      await supabase
-        .from("user_challenges")
-        .update({ completed: true, completed_at: new Date().toISOString() })
-        .eq("user_id", userId!)
-        .eq("challenge_id", challengeId);
+      await completeFn({ data: { challenge_id: challengeId } });
     },
     onSuccess: () => { toast.success("Marked complete! 🌱"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
+    onError: (e: any) => toast.error(e.message),
   });
 
   return (
