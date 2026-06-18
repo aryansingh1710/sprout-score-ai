@@ -45,12 +45,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">Something went wrong on our end.</p>
         <div className="mt-6 flex justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
           >
             Try again
           </button>
-          <a href="/" className="rounded-md border px-4 py-2 text-sm">Go home</a>
+          <a href="/" className="rounded-md border px-4 py-2 text-sm">
+            Go home
+          </a>
         </div>
       </div>
     </div>
@@ -63,16 +68,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Verdant — Carbon Footprint Awareness" },
-      { name: "description", content: "Track, understand, and reduce your carbon footprint with an AI sustainability coach." },
+      {
+        name: "description",
+        content:
+          "Track, understand, and reduce your carbon footprint with an AI sustainability coach.",
+      },
       { name: "author", content: "Verdant" },
       { property: "og:title", content: "Verdant — Carbon Footprint Awareness" },
-      { property: "og:description", content: "Track, understand, and reduce your carbon footprint with an AI sustainability coach." },
+      {
+        property: "og:description",
+        content:
+          "Track, understand, and reduce your carbon footprint with an AI sustainability coach.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Verdant — Carbon Footprint Awareness" },
-      { name: "twitter:description", content: "Track, understand, and reduce your carbon footprint with an AI sustainability coach." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/10ae4cba-3773-4189-af19-df3e1c05c5b6/id-preview-a93e4603--a99593fc-fc9e-4229-965a-ccb807286508.lovable.app-1781776168208.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/10ae4cba-3773-4189-af19-df3e1c05c5b6/id-preview-a93e4603--a99593fc-fc9e-4229-965a-ccb807286508.lovable.app-1781776168208.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Track, understand, and reduce your carbon footprint with an AI sustainability coach.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/10ae4cba-3773-4189-af19-df3e1c05c5b6/id-preview-a93e4603--a99593fc-fc9e-4229-965a-ccb807286508.lovable.app-1781776168208.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/10ae4cba-3773-4189-af19-df3e1c05c5b6/id-preview-a93e4603--a99593fc-fc9e-4229-965a-ccb807286508.lovable.app-1781776168208.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

@@ -1,3 +1,4 @@
+import { errorMessage } from "./errors";
 import { createServerFn } from "@tanstack/react-start";
 import { generateText } from "ai";
 import { z } from "zod";
@@ -19,7 +20,9 @@ export const askCoach = createServerFn({ method: "POST" })
     // Fetch last 14 days of footprint to ground the response
     const { data: entries } = await supabase
       .from("footprint_entries")
-      .select("entry_date, total_kg, transportation_kg, electricity_kg, food_kg, shopping_kg, waste_kg")
+      .select(
+        "entry_date, total_kg, transportation_kg, electricity_kg, food_kg, shopping_kg, waste_kg",
+      )
       .eq("user_id", userId)
       .order("entry_date", { ascending: false })
       .limit(14);
@@ -66,8 +69,8 @@ Recent 14-day footprint entries: ${JSON.stringify(entries ?? [])}`;
         })),
       });
       text = result.text;
-    } catch (e: any) {
-      const msg = String(e?.message ?? e);
+    } catch (e: unknown) {
+      const msg = errorMessage(e, "AI request failed");
       if (msg.includes("429")) throw new Error("AI is rate-limited. Try again shortly.");
       if (msg.includes("402"))
         throw new Error("AI credits exhausted. Please add credits in workspace billing.");

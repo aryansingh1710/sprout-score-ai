@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/errors";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Leaf } from "lucide-react";
@@ -31,7 +32,12 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  async function handleEmail(mode: "signin" | "signup", email: string, password: string, name?: string) {
+  async function handleEmail(
+    mode: "signin" | "signup",
+    email: string,
+    password: string,
+    name?: string,
+  ) {
     setLoading(true);
     try {
       if (mode === "signup") {
@@ -52,8 +58,8 @@ function AuthPage() {
       }
       router.invalidate();
       navigate({ to: "/dashboard", replace: true });
-    } catch (e: any) {
-      toast.error(e.message || "Something went wrong.");
+    } catch (e: unknown) {
+      toast.error(errorMessage(e, "Something went wrong."));
     } finally {
       setLoading(false);
     }
@@ -88,7 +94,12 @@ function AuthPage() {
             Sign in to start lowering your footprint.
           </p>
 
-          <Button onClick={handleGoogle} disabled={loading} variant="outline" className="w-full mt-6 gap-2">
+          <Button
+            onClick={handleGoogle}
+            disabled={loading}
+            variant="outline"
+            className="w-full mt-6 gap-2"
+          >
             <GoogleIcon /> Continue with Google
           </Button>
           <div className="flex items-center gap-3 my-4">
@@ -103,10 +114,19 @@ function AuthPage() {
               <TabsTrigger value="signup">Sign up</TabsTrigger>
             </TabsList>
             <TabsContent value="signin">
-              <EmailForm loading={loading} onSubmit={(e, p) => handleEmail("signin", e, p)} cta="Sign in" />
+              <EmailForm
+                loading={loading}
+                onSubmit={(e, p) => handleEmail("signin", e, p)}
+                cta="Sign in"
+              />
             </TabsContent>
             <TabsContent value="signup">
-              <EmailForm loading={loading} onSubmit={(e, p, n) => handleEmail("signup", e, p, n)} cta="Create account" showName />
+              <EmailForm
+                loading={loading}
+                onSubmit={(e, p, n) => handleEmail("signup", e, p, n)}
+                cta="Create account"
+                showName
+              />
             </TabsContent>
           </Tabs>
         </GlassCard>
@@ -145,7 +165,13 @@ function EmailForm({
       )}
       <div>
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
@@ -168,7 +194,10 @@ function EmailForm({
 function GoogleIcon() {
   return (
     <svg viewBox="0 0 24 24" className="size-4" aria-hidden>
-      <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.4-1.6 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.4 14.6 2.5 12 2.5 6.7 2.5 2.5 6.7 2.5 12s4.2 9.5 9.5 9.5c5.5 0 9.1-3.8 9.1-9.2 0-.6-.1-1.1-.2-1.6H12z"/>
+      <path
+        fill="#EA4335"
+        d="M12 10.2v3.9h5.5c-.2 1.4-1.6 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.4 14.6 2.5 12 2.5 6.7 2.5 2.5 6.7 2.5 12s4.2 9.5 9.5 9.5c5.5 0 9.1-3.8 9.1-9.2 0-.6-.1-1.1-.2-1.6H12z"
+      />
     </svg>
   );
 }

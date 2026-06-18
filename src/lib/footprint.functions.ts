@@ -8,7 +8,6 @@ const onboardingSchema = z.object({
   weekly_goal_kg: z.coerce.number().min(20).max(500),
 });
 
-
 export const saveFootprintEntry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => calculatorSchema.parse(input))
@@ -34,9 +33,7 @@ export const saveFootprintEntry = createServerFn({ method: "POST" })
     let streak = 1;
     if (profile?.last_entry_date) {
       const last = new Date(profile.last_entry_date);
-      const diff = Math.round(
-        (new Date(today).getTime() - last.getTime()) / 86400000,
-      );
+      const diff = Math.round((new Date(today).getTime() - last.getTime()) / 86400000);
       if (diff === 0) streak = profile.streak_days || 1;
       else if (diff === 1) streak = (profile.streak_days || 0) + 1;
       else streak = 1;
@@ -56,10 +53,7 @@ export const saveFootprintEntry = createServerFn({ method: "POST" })
     if (streak >= 7) slugs.push("week-streak");
     if (streak >= 30) slugs.push("month-streak");
     if (slugs.length) {
-      const { data: badges } = await supabase
-        .from("badges")
-        .select("id, slug")
-        .in("slug", slugs);
+      const { data: badges } = await supabase.from("badges").select("id, slug").in("slug", slugs);
       if (badges?.length) {
         // Use service-role client: the user_badges INSERT policy has been
         // removed so clients cannot grant themselves badges. Eligibility

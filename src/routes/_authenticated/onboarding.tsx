@@ -1,3 +1,4 @@
+import { errorMessage } from "@/lib/errors";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -25,7 +26,11 @@ function Onboarding() {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return;
-      const { data: p } = await supabase.from("profiles").select("display_name, onboarded").eq("id", data.user.id).maybeSingle();
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("display_name, onboarded")
+        .eq("id", data.user.id)
+        .maybeSingle();
       if (p?.onboarded) navigate({ to: "/dashboard" });
       if (p?.display_name) setName(p.display_name);
     });
@@ -38,8 +43,8 @@ function Onboarding() {
       await onboard({ data: { display_name: name, weekly_goal_kg: goal } });
       toast.success("All set!");
       navigate({ to: "/dashboard" });
-    } catch (e: any) {
-      toast.error(e.message ?? "Something went wrong");
+    } catch (e: unknown) {
+      toast.error(errorMessage(e));
     } finally {
       setLoading(false);
     }
@@ -55,7 +60,13 @@ function Onboarding() {
         <form onSubmit={submit} className="space-y-5">
           <div>
             <Label htmlFor="name">What should we call you?</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={60} />
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              maxLength={60}
+            />
           </div>
           <div>
             <Label htmlFor="goal">Weekly COâ‚‚e goal (kg)</Label>

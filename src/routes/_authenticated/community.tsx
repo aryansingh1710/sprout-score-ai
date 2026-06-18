@@ -23,7 +23,6 @@ function Community() {
   const [content, setContent] = useState("");
   const awardBadge = useServerFn(awardParticipationBadge);
 
-
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
   }, []);
@@ -39,11 +38,11 @@ function Community() {
       const ids = Array.from(new Set((data ?? []).map((p) => p.user_id)));
       const { data: profiles } = ids.length
         ? await supabase.from("profiles").select("id, display_name").in("id", ids)
-        : { data: [] as any[] };
+        : { data: [] as { id: string; display_name: string | null }[] };
       const { data: likes } = await supabase.from("post_likes").select("post_id, user_id");
-      const profileMap = new Map((profiles ?? []).map((p: any) => [p.id, p]));
+      const profileMap = new Map((profiles ?? []).map((p) => [p.id, p] as const));
       const likeMap = new Map<string, string[]>();
-      (likes ?? []).forEach((l: any) => {
+      (likes ?? []).forEach((l) => {
         const arr = likeMap.get(l.post_id) ?? [];
         arr.push(l.user_id);
         likeMap.set(l.post_id, arr);
@@ -67,7 +66,7 @@ function Community() {
       qc.invalidateQueries({ queryKey: ["posts"] });
       toast.success("Posted");
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const toggleLike = useMutation({
@@ -80,12 +79,20 @@ function Community() {
     },
     onMutate: async ({ postId, liked }) => {
       await qc.cancelQueries({ queryKey: ["posts"] });
-      const prev = qc.getQueryData(["posts"]) as any[] | undefined;
-      qc.setQueryData(["posts"], (prev ?? []).map((p: any) =>
-        p.id === postId
-          ? { ...p, likes: liked ? p.likes.filter((u: string) => u !== userId) : [...p.likes, userId] }
-          : p,
-      ));
+      const prev = qc.getQueryData<Array<{ id: string; likes: string[]; [k: string]: unknown }>>([
+        "posts",
+      ]);
+      qc.setQueryData(
+        ["posts"],
+        (prev ?? []).map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                likes: liked ? p.likes.filter((u: string) => u !== userId) : [...p.likes, userId],
+              }
+            : p,
+        ),
+      );
       return { prev };
     },
     onError: (_e, _v, ctx) => ctx?.prev && qc.setQueryData(["posts"], ctx.prev),
@@ -108,7 +115,10 @@ function Community() {
 
       <GlassCard>
         <form
-          onSubmit={(e) => { e.preventDefault(); if (content.trim()) createPost.mutate(content.trim()); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (content.trim()) createPost.mutate(content.trim());
+          }}
           className="space-y-3"
         >
           <Textarea
@@ -120,7 +130,11 @@ function Community() {
           />
           <div className="flex justify-between items-center">
             <span className="text-xs text-muted-foreground">{content.length}/500</span>
-            <Button type="submit" disabled={createPost.isPending || !content.trim()} className="gap-2">
+            <Button
+              type="submit"
+              disabled={createPost.isPending || !content.trim()}
+              className="gap-2"
+            >
               <Send className="size-4" /> Post
             </Button>
           </div>
@@ -140,7 +154,9 @@ function Community() {
           return (
             <GlassCard key={p.id}>
               <div className="flex gap-3">
-                <Avatar><AvatarFallback>{initials}</AvatarFallback></Avatar>
+                <Avatar>
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>

@@ -15,7 +15,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Verdant — Carbon Footprint Awareness Platform" },
       {
         property: "og:description",
-        content: "Measure, understand, and lower your COâ‚‚ — with an AI sustainability coach by your side.",
+        content:
+          "Measure, understand, and lower your COâ‚‚ — with an AI sustainability coach by your side.",
       },
     ],
   }),
@@ -33,8 +34,12 @@ function Landing() {
           <span className="font-display font-bold text-lg">Verdant</span>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/auth"><Button variant="ghost">Sign in</Button></Link>
-          <Link to="/auth"><Button>Get started</Button></Link>
+          <Link to="/auth">
+            <Button variant="ghost">Sign in</Button>
+          </Link>
+          <Link to="/auth">
+            <Button>Get started</Button>
+          </Link>
         </div>
       </header>
 
@@ -48,37 +53,61 @@ function Landing() {
           <br /> one honest day at a time.
         </h1>
         <p className="max-w-2xl mx-auto mt-6 text-lg text-muted-foreground">
-          Verdant turns daily habits into a clear COâ‚‚ score, then coaches you with practical, money-saving swaps —
-          backed by streaks, challenges and a community that cheers you on.
+          Verdant turns daily habits into a clear COâ‚‚ score, then coaches you with practical,
+          money-saving swaps — backed by streaks, challenges and a community that cheers you on.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3">
           <Link to="/auth">
-            <Button size="lg" className="gap-2">Start tracking free <ArrowRight className="size-4" /></Button>
+            <Button size="lg" className="gap-2">
+              Start tracking free <ArrowRight className="size-4" />
+            </Button>
           </Link>
-          <a href="#features"><Button size="lg" variant="ghost">See how it works</Button></a>
+          <a href="#features">
+            <Button size="lg" variant="ghost">
+              See how it works
+            </Button>
+          </a>
         </div>
 
         <div className="mt-16 grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
           <GlassCard className="text-left">
             <div className="text-3xl font-display font-bold gradient-text">0–100</div>
-            <p className="text-sm text-muted-foreground mt-1">Daily carbon score with category breakdown</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Daily carbon score with category breakdown
+            </p>
           </GlassCard>
           <GlassCard className="text-left">
             <div className="text-3xl font-display font-bold gradient-text">~14kg</div>
-            <p className="text-sm text-muted-foreground mt-1">Avg weekly COâ‚‚e saved by users following the coach</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Avg weekly COâ‚‚e saved by users following the coach
+            </p>
           </GlassCard>
           <GlassCard className="text-left">
             <div className="text-3xl font-display font-bold gradient-text">5min</div>
-            <p className="text-sm text-muted-foreground mt-1">All it takes to log a day. Streaks do the rest.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              All it takes to log a day. Streaks do the rest.
+            </p>
           </GlassCard>
         </div>
       </section>
 
       <section id="features" className="max-w-7xl mx-auto px-6 pb-24 grid md:grid-cols-3 gap-6">
         {[
-          { icon: BarChart3, title: "Honest measurement", desc: "Transportation, electricity, food, shopping and waste — translated into kg COâ‚‚e you can act on." },
-          { icon: Bot, title: "AI sustainability coach", desc: "Grounded in your real data. Suggests concrete swaps with estimated COâ‚‚ and money saved." },
-          { icon: Trophy, title: "Streaks, badges, community", desc: "Weekly challenges, leaderboard and a feed to share wins. Sustainable change is social." },
+          {
+            icon: BarChart3,
+            title: "Honest measurement",
+            desc: "Transportation, electricity, food, shopping and waste — translated into kg COâ‚‚e you can act on.",
+          },
+          {
+            icon: Bot,
+            title: "AI sustainability coach",
+            desc: "Grounded in your real data. Suggests concrete swaps with estimated COâ‚‚ and money saved.",
+          },
+          {
+            icon: Trophy,
+            title: "Streaks, badges, community",
+            desc: "Weekly challenges, leaderboard and a feed to share wins. Sustainable change is social.",
+          },
         ].map((f) => (
           <GlassCard key={f.title}>
             <f.icon className="size-6 text-accent mb-3" />

@@ -1,3 +1,4 @@
+import type React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -6,7 +7,7 @@ import { GlassCard } from "@/components/glass-card";
 import { Award, Sprout, Flame, Feather, Target, Megaphone, Leaf } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   sprout: Sprout,
   flame: Flame,
   feather: Feather,
@@ -31,7 +32,10 @@ function Badges() {
     enabled: !!userId,
     queryFn: async () => {
       const { data: all } = await supabase.from("badges").select("*").order("name");
-      const { data: mine } = await supabase.from("user_badges").select("badge_id").eq("user_id", userId!);
+      const { data: mine } = await supabase
+        .from("user_badges")
+        .select("badge_id")
+        .eq("user_id", userId!);
       const set = new Set((mine ?? []).map((m) => m.badge_id));
       return (all ?? []).map((b) => ({ ...b, earned: set.has(b.id) }));
     },

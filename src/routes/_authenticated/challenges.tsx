@@ -20,7 +20,6 @@ function Challenges() {
   const awardBadge = useServerFn(awardParticipationBadge);
   const completeFn = useServerFn(completeChallenge);
 
-
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
   }, []);
@@ -38,8 +37,8 @@ function Challenges() {
         .from("user_challenges")
         .select("challenge_id, completed")
         .eq("user_id", userId!);
-      const map = new Map((mine ?? []).map((m: any) => [m.challenge_id, m]));
-      return (challenges ?? []).map((c: any) => ({ ...c, joined: map.get(c.id) }));
+      const map = new Map((mine ?? []).map((m) => [m.challenge_id, m] as const));
+      return (challenges ?? []).map((c) => ({ ...c, joined: map.get(c.id) }));
     },
   });
 
@@ -51,16 +50,22 @@ function Challenges() {
       if (error) throw error;
       await awardBadge({ data: { slug: "challenger" } }).catch(() => {});
     },
-    onSuccess: () => { toast.success("Challenge joined!"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
-    onError: (e: any) => toast.error(e.message),
+    onSuccess: () => {
+      toast.success("Challenge joined!");
+      qc.invalidateQueries({ queryKey: ["challenges", userId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const complete = useMutation({
     mutationFn: async (challengeId: string) => {
       await completeFn({ data: { challenge_id: challengeId } });
     },
-    onSuccess: () => { toast.success("Marked complete! 🌱"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
-    onError: (e: any) => toast.error(e.message),
+    onSuccess: () => {
+      toast.success("Marked complete! 🌱");
+      qc.invalidateQueries({ queryKey: ["challenges", userId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (
@@ -72,7 +77,7 @@ function Challenges() {
         <p className="text-sm text-muted-foreground">Pick one. Move the needle this week.</p>
       </div>
       <div className="grid md:grid-cols-2 gap-4">
-        {q.data?.map((c: any) => (
+        {q.data?.map((c) => (
           <GlassCard key={c.id}>
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -101,7 +106,11 @@ function Challenges() {
                   <CheckCircle2 className="size-4" /> Completed
                 </span>
               ) : (
-                <Button variant="outline" onClick={() => complete.mutate(c.id)} disabled={complete.isPending}>
+                <Button
+                  variant="outline"
+                  onClick={() => complete.mutate(c.id)}
+                  disabled={complete.isPending}
+                >
                   Mark complete
                 </Button>
               )}
@@ -109,7 +118,9 @@ function Challenges() {
           </GlassCard>
         ))}
         {q.data?.length === 0 && (
-          <GlassCard className="text-center text-sm text-muted-foreground">No active challenges right now.</GlassCard>
+          <GlassCard className="text-center text-sm text-muted-foreground">
+            No active challenges right now.
+          </GlassCard>
         )}
       </div>
     </div>

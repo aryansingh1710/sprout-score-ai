@@ -48,19 +48,23 @@ function Coach() {
     },
   });
 
-  const send = useMutation({
-    mutationFn: async (message: string) => ask({ data: { message } }),
+  type CoachMsg = { id: string; role: string; content: string; created_at: string };
+  const send = useMutation<{ reply: string }, Error, string, { prev: CoachMsg[] | undefined }>({
+    mutationFn: (message: string) => ask({ data: { message } }),
     onMutate: async (message) => {
       await qc.cancelQueries({ queryKey: ["coach", userId] });
-      const prev = qc.getQueryData(["coach", userId]) as any[] | undefined;
-      qc.setQueryData(["coach", userId], [
-        ...(prev ?? []),
-        { id: "tmp-u", role: "user", content: message, created_at: new Date().toISOString() },
-        { id: "tmp-a", role: "assistant", content: "…", created_at: new Date().toISOString() },
-      ]);
+      const prev = qc.getQueryData<CoachMsg[]>(["coach", userId]);
+      qc.setQueryData<CoachMsg[]>(
+        ["coach", userId],
+        [
+          ...(prev ?? []),
+          { id: "tmp-u", role: "user", content: message, created_at: new Date().toISOString() },
+          { id: "tmp-a", role: "assistant", content: "…", created_at: new Date().toISOString() },
+        ],
+      );
       return { prev };
     },
-    onError: (e: any, _v, ctx) => {
+    onError: (e, _v, ctx) => {
       if (ctx?.prev) qc.setQueryData(["coach", userId], ctx.prev);
       toast.error(e.message ?? "Coach unavailable");
     },
@@ -132,9 +136,7 @@ function Coach() {
               <div
                 className={cn(
                   "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap",
-                  m.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "glass",
+                  m.role === "user" ? "bg-primary text-primary-foreground" : "glass",
                 )}
               >
                 {m.content}
@@ -144,7 +146,10 @@ function Coach() {
         </div>
 
         <form
-          onSubmit={(e) => { e.preventDefault(); submit(input); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit(input);
+          }}
           className="border-t border-border/50 p-4 flex gap-2"
         >
           <Input

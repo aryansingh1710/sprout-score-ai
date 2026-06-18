@@ -26,7 +26,13 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
+const CHART_COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -82,10 +88,13 @@ function Dashboard() {
   const total30 = entries.slice(0, 30).reduce((s, e) => s + Number(e.total_kg), 0);
   const score = last ? carbonScore(Number(last.total_kg)) : 100;
 
-  const trend = [...entries].reverse().slice(-14).map((e) => ({
-    date: e.entry_date.slice(5),
-    kg: Number(e.total_kg),
-  }));
+  const trend = [...entries]
+    .reverse()
+    .slice(-14)
+    .map((e) => ({
+      date: e.entry_date.slice(5),
+      kg: Number(e.total_kg),
+    }));
 
   const breakdown = last
     ? [
@@ -107,7 +116,9 @@ function Dashboard() {
           <p className="text-sm text-muted-foreground">
             Hello{profileQ.data?.display_name ? `, ${profileQ.data.display_name}` : ""}
           </p>
-          <h1 className="font-display text-3xl md:text-4xl font-bold">Your footprint at a glance</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-bold">
+            Your footprint at a glance
+          </h1>
         </div>
         <Link to="/calculator">
           <Button className="gap-2">
@@ -131,7 +142,9 @@ function Dashboard() {
             <p className="text-sm text-muted-foreground">Today</p>
             <TrendingDown className="size-4 text-primary" />
           </div>
-          <div className="text-4xl font-display font-bold mt-2">{last ? Number(last.total_kg).toFixed(1) : "—"}</div>
+          <div className="text-4xl font-display font-bold mt-2">
+            {last ? Number(last.total_kg).toFixed(1) : "—"}
+          </div>
           <p className="text-xs text-muted-foreground mt-1">kg COâ‚‚e</p>
         </GlassCard>
         <GlassCard>
@@ -150,7 +163,9 @@ function Dashboard() {
             <p className="text-sm text-muted-foreground">Streak</p>
             <Flame className="size-4 text-accent" />
           </div>
-          <div className="text-4xl font-display font-bold mt-2">{profileQ.data?.streak_days ?? 0}</div>
+          <div className="text-4xl font-display font-bold mt-2">
+            {profileQ.data?.streak_days ?? 0}
+          </div>
           <p className="text-xs text-muted-foreground mt-1">days logged in a row</p>
         </GlassCard>
       </div>
@@ -195,7 +210,14 @@ function Dashboard() {
             <div className="h-64">
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={breakdown} dataKey="value" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={3}>
+                  <Pie
+                    data={breakdown}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={50}
+                    outerRadius={85}
+                    paddingAngle={3}
+                  >
                     {breakdown.map((_, i) => (
                       <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                     ))}
@@ -227,7 +249,9 @@ function EmptyState() {
       <div>
         <p className="text-sm text-muted-foreground">No data yet.</p>
         <Link to="/calculator">
-          <Button variant="link" className="mt-1">Log your first day →</Button>
+          <Button variant="link" className="mt-1">
+            Log your first day →
+          </Button>
         </Link>
       </div>
     </div>
