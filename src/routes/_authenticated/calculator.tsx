@@ -1,3 +1,4 @@
+import type React from "react";
 import { errorMessage } from "@/lib/errors";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
