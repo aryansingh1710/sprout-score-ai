@@ -69,6 +69,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Track, understand, and reduce your carbon footprint with an AI sustainability coach." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Verdant — Carbon Footprint Awareness" },
+      { name: "twitter:description", content: "Track, understand, and reduce your carbon footprint with an AI sustainability coach." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/10ae4cba-3773-4189-af19-df3e1c05c5b6/id-preview-a93e4603--a99593fc-fc9e-4229-965a-ccb807286508.lovable.app-1781776168208.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/10ae4cba-3773-4189-af19-df3e1c05c5b6/id-preview-a93e4603--a99593fc-fc9e-4229-965a-ccb807286508.lovable.app-1781776168208.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
