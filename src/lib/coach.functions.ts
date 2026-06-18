@@ -69,7 +69,7 @@ Recent 14-day footprint entries: ${JSON.stringify(entries ?? [])}`;
       });
       text = result.text;
     } catch (e: unknown) {
-      const msg = String(e?.message ?? e);
+      const msg = errorMessage(e, "AI request failed");
       if (msg.includes("429")) throw new Error("AI is rate-limited. Try again shortly.");
       if (msg.includes("402"))
         throw new Error("AI credits exhausted. Please add credits in workspace billing.");

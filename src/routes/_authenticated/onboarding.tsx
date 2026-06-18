@@ -43,7 +43,7 @@ function Onboarding() {
       toast.success("All set!");
       navigate({ to: "/dashboard" });
     } catch (e: unknown) {
-      toast.error(e.message ?? "Something went wrong");
+      toast.error(errorMessage(e));
     } finally {
       setLoading(false);
     }
