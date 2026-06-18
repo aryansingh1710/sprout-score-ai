@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { GlassCard } from "@/components/glass-card";
 import { Button } from "@/components/ui/button";
 import { Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { awardParticipationBadge, completeChallenge } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/challenges")({
   head: () => ({ meta: [{ title: "Challenges — Verdant" }] }),
@@ -15,6 +17,9 @@ export const Route = createFileRoute("/_authenticated/challenges")({
 function Challenges() {
   const qc = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
+  const awardBadge = useServerFn(awardParticipationBadge);
+  const completeFn = useServerFn(completeChallenge);
+
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
@@ -44,8 +49,7 @@ function Challenges() {
         .from("user_challenges")
         .insert({ user_id: userId!, challenge_id: challengeId });
       if (error) throw error;
-      const { data: badge } = await supabase.from("badges").select("id").eq("slug", "challenger").maybeSingle();
-      if (badge) await supabase.from("user_badges").upsert({ user_id: userId!, badge_id: badge.id }, { onConflict: "user_id,badge_id", ignoreDuplicates: true });
+      await awardBadge({ data: { slug: "challenger" } }).catch(() => {});
     },
     onSuccess: () => { toast.success("Challenge joined!"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
     onError: (e: any) => toast.error(e.message),
@@ -53,13 +57,10 @@ function Challenges() {
 
   const complete = useMutation({
     mutationFn: async (challengeId: string) => {
-      await supabase
-        .from("user_challenges")
-        .update({ completed: true, completed_at: new Date().toISOString() })
-        .eq("user_id", userId!)
-        .eq("challenge_id", challengeId);
+      await completeFn({ data: { challenge_id: challengeId } });
     },
     onSuccess: () => { toast.success("Marked complete! 🌱"); qc.invalidateQueries({ queryKey: ["challenges", userId] }); },
+    onError: (e: any) => toast.error(e.message),
   });
 
   return (

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { GlassCard } from "@/components/glass-card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Heart, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { awardParticipationBadge } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/community")({
   head: () => ({ meta: [{ title: "Community — Verdant" }] }),
@@ -19,6 +21,8 @@ function Community() {
   const qc = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
   const [content, setContent] = useState("");
+  const awardBadge = useServerFn(awardParticipationBadge);
+
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
@@ -59,9 +63,7 @@ function Community() {
     },
     onSuccess: async () => {
       setContent("");
-      // award badge
-      const { data: badge } = await supabase.from("badges").select("id").eq("slug", "community-voice").maybeSingle();
-      if (badge) await supabase.from("user_badges").upsert({ user_id: userId!, badge_id: badge.id }, { onConflict: "user_id,badge_id", ignoreDuplicates: true });
+      await awardBadge({ data: { slug: "community-voice" } }).catch(() => {});
       qc.invalidateQueries({ queryKey: ["posts"] });
       toast.success("Posted");
     },
